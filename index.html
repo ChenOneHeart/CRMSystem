@@ -19,17 +19,6 @@
         <span class="w150">操作</span>
     </h2>
     <ul class="list" id="list">
-<!--        <li>-->
-<!--            <span class="w50">1</span>-->
-<!--            <span class="w150">xxx</span>-->
-<!--            <span class="w50">25</span>-->
-<!--            <span class="w200">xxx</span>-->
-<!--            <span class="w200">xxx</span>-->
-<!--            <span class="w150 control">-->
-<!--                <a href="">修改</a>-->
-<!--                <a href="">删除</a>-->
-<!--            </span>-->
-<!--        </li>-->
     </ul>
 </div>
 <script charset="utf-8" type="text/javascript" src="js/ajax.js"></script>
@@ -43,7 +32,7 @@
                 e = e || window.event;
                 var tar = e.target || e.srcElement,
                     tarTag = tar.tagName.toUpperCase();
-                //电机的是删除按钮
+                //点击的是删除按钮
                 if (tarTag === "A" && tar.innerHTML === "删除"){
                     //确认提示框，如果flag=true说明点击的是确定按钮
 
