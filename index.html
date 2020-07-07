@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>客户管理系统</title>
+    <link charset="utf-8" type="text/css" rel="stylesheet" href="css/index.css">
+
+</head>
+<body>
+
+<div class="box">
+    <a class="link" href="add.html">增加新客户</a>
+    <h2 class="head">
+        <span class="w50">编号</span>
+        <span class="w150">姓名</span>
+        <span class="w50">年龄</span>
+        <span class="w200">电话</span>
+        <span class="w200">地址</span>
+        <span class="w150">操作</span>
+    </h2>
+    <ul class="list" id="list">
+<!--        <li>-->
+<!--            <span class="w50">1</span>-->
+<!--            <span class="w150">xxx</span>-->
+<!--            <span class="w50">25</span>-->
+<!--            <span class="w200">xxx</span>-->
+<!--            <span class="w200">xxx</span>-->
+<!--            <span class="w150 control">-->
+<!--                <a href="">修改</a>-->
+<!--                <a href="">删除</a>-->
+<!--            </span>-->
+<!--        </li>-->
+    </ul>
+</div>
+<script charset="utf-8" type="text/javascript" src="js/ajax.js"></script>
+<script charset="utf-8" type="text/javascript">
+    var oList = document.getElementById("list");
+    //单例模式：只允许存在一个实例
+    var customModule = (function () {
+        //DELETE CUSTOM
+        function removeCustom() {
+            oList.onclick = function (e) {
+                e = e || window.event;
+                var tar = e.target || e.srcElement,
+                    tarTag = tar.tagName.toUpperCase();
+                //电机的是删除按钮
+                if (tarTag === "A" && tar.innerHTML === "删除"){
+                    //确认提示框，如果flag=true说明点击的是确定按钮
+
+                    var customId = tar.getAttribute("customId"),
+                        flag = window.confirm("确定要删除编号为"+customId+"的客户吗？");
+                    if (flag){
+                        ajax({
+                            url:'/removeInfo?id=0' + customId,
+                            success:function (jsonData) {
+                                if (jsonData && jsonData.code == 0){
+                                    oList.removeChild(tar.parentNode.parentNode);
+                                    return;
+                                }
+                                alert(jsonData.msg);
+                            }
+                        })
+                    }
+                }
+            }
+        }
+
+        //BIND HTML
+        function  bindHTML(data) {
+            var str = '';
+            for (var i = 0; i < data.length; i++) {
+                var curData = data[i];
+                str += '<li>';
+                str += ' <span class="w50">' + curData["id"] + '</span>';
+                str += ' <span class="w150">' + curData["name"] + '</span>';
+                str += ' <span class="w50">' + curData["age"] + '</span>';
+                str += ' <span class="w200">' + curData["phone"] + '</span>';
+                str += ' <span class="w200">' + curData["address"]+ '</span>';
+                str += ' <span class="w150 control">';
+                str += '<a href="add.html?id=' + curData["id"] + '">修改</a>';
+                str += '<a href="javascript:;" customId="' + curData["id"] + '">删除</a>';
+                str += '</span>';
+                str += '</li>';
+            }
+            oList.innerHTML = str;
+        }
+        //SEND AJAX GET DATA
+        function init(){
+            ajax({
+                url:"/getList",
+                //jsonData：形参，从服务器传来的JSON格式的对象
+                success:function (jsonData) {
+                    if (jsonData && jsonData.code == 0){
+                        var data = jsonData["data"];
+                        // bind html
+                        bindHTML(data);
+                        removeCustom();
+                    }
+                }
+            });
+        }
+        return {
+            init:init
+        };
+    })();
+    customModule.init();
+
+</script>
+</body>
+</html>
